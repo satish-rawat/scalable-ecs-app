@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:6.2-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    environment:
+      - WORKER_TYPE=api
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  worker:
+    build: .
+    environment:
+      - WORKER_TYPE=hub_worker
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  processing_worker:
+    build: .
+    environment:
+      - WORKER_TYPE=processing_worker
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  beat:
+    build: .
+    environment:
+      - WORKER_TYPE=beat_worker
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  flower:
+    build: .
+    environment:
+      - WORKER_TYPE=flower_worker
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
