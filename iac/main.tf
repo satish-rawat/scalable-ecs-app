@@ -20,8 +20,3 @@ locals {
     Env     = var.environment
   }, var.tags)
 }
-
-# VPC and networking configuration moved to `vpc.tf`
-# ECS cluster and CloudWatch Log Group moved to `ecs-service.tf`
-
-# Outputs have been moved to `output.tf` to keep things organized

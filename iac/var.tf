@@ -46,10 +46,16 @@ variable "image_tag" {
   default     = "latest"
 }
 
-variable "container_port" {
+variable "container_api_port" {
   description = "Port the container listens on"
   type        = number
   default     = 8000
+}
+
+variable "container_flower_port" {
+  description = "Port the container listens on"
+  type        = number
+  default     = 5555
 }
 
 variable "desired_count" {

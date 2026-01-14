@@ -1,4 +1,4 @@
-resource "aws_lb" "app" {
+resource "aws_lb" "app_load_balancer" {
   name               = "${var.project_name}-${var.environment}-alb"
   internal           = false
   load_balancer_type = "application"
@@ -7,11 +7,11 @@ resource "aws_lb" "app" {
   tags = local.common_tags
 }
 
-resource "aws_lb_target_group" "app" {
+resource "aws_lb_target_group" "app_target_group" {
   name     = "${var.project_name}-${var.environment}-tg"
   port     = var.container_port
   protocol = "HTTP"
-  vpc_id   = aws_vpc.this.id
+  vpc_id   = aws_vpc.app_vpc.id
   target_type = "ip"
   health_check {
     path                = "/health"
@@ -23,12 +23,12 @@ resource "aws_lb_target_group" "app" {
   tags = local.common_tags
 }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.app.arn
+resource "aws_lb_listener" "app_listener" {
+  load_balancer_arn = aws_lb.app_load_balancer.arn
   port              = "80"
   protocol          = "HTTP"
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.app.arn
+    target_group_arn = aws_lb_target_group.app_target_group.arn
   }
 }

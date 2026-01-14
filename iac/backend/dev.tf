@@ -5,8 +5,8 @@
 # Example backend block (replace placeholders or pass via -backend-config):
 terraform {
   backend "s3" {
-    bucket         = "application-state"
-    key            = "${var.project_name}/${var.environment}/terraform.tfstate"
+    bucket         = "application-terraform-states"
+    key            = "${var.project_name}-${var.environment}/terraform.tfstate"
     region         = "${var.aws_region}"
     encrypt        = true
   }
